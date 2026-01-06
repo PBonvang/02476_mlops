@@ -21,7 +21,7 @@ from data import load_corrupt_mnist
 from model import MyAwesomeModel
 
 # %% Constants
-DS_PATH = Path('corruptmnist_v1/')
+DS_PATH = Path('data/corruptmnist_v1/')
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # %% Test area
