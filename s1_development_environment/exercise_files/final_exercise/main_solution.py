@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import torch
 import typer
+from tqdm import tqdm
+
 from data_solution import corrupt_mnist
 from model_solution import MyAwesomeModel
 
@@ -26,7 +28,10 @@ def train(lr: float = 1e-3, batch_size: int = 32, epochs: int = 10) -> None:
     statistics = {"train_loss": [], "train_accuracy": []}
     for epoch in range(epochs):
         model.train()
-        for i, (img, target) in enumerate(train_dataloader):
+        for i, (img, target) in tqdm(
+                enumerate(train_dataloader),
+                total=len(train_dataloader),
+                desc=f"Epoch {epoch + 1}/{epochs}"):    
             img, target = img.to(DEVICE), target.to(DEVICE)
             optimizer.zero_grad()
             y_pred = model(img)
@@ -37,9 +42,8 @@ def train(lr: float = 1e-3, batch_size: int = 32, epochs: int = 10) -> None:
 
             accuracy = (y_pred.argmax(dim=1) == target).float().mean().item()
             statistics["train_accuracy"].append(accuracy)
-
-            if i % 100 == 0:
-                print(f"Epoch {epoch}, iter {i}, loss: {loss.item()}")
+        
+        print(f"Epoch {epoch+1} - Loss: {loss.item()}, acc: {accuracy:%}")
 
     print("Training complete")
     torch.save(model.state_dict(), "model.pth")
@@ -65,12 +69,12 @@ def evaluate(model_checkpoint: str) -> None:
 
     model.eval()
     correct, total = 0, 0
-    for img, target in test_dataloader:
+    for img, target in tqdm(test_dataloader, desc="Validation steps"):
         img, target = img.to(DEVICE), target.to(DEVICE)
         y_pred = model(img)
         correct += (y_pred.argmax(dim=1) == target).float().sum().item()
         total += target.size(0)
-    print(f"Test accuracy: {correct / total}")
+    print(f"Test accuracy: {correct / total:%}")
 
 
 if __name__ == "__main__":
