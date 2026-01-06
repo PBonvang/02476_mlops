@@ -19,7 +19,17 @@ def train(
     models_dir: Path = Path('models'),
     dataset_path: Path = Path('data/processed'),
     checkpoint_interval: int = 5) -> None:
-    """Train a model on MNIST."""
+    """
+    Train a model on the corrupted MNIST dataset.
+
+    Parameters:
+    - epochs (int): Number of training epochs. Default is 10.
+    - lr (float): Learning rate for the optimizer. Default is 1e-3.
+    - batch_size (int): Size of each training batch. Default is 32.
+    - models_dir (Path): Directory to save trained models. Default is 'models'.
+    - dataset_path (Path): Path to the processed dataset. Default is 'data/processed'.
+    - checkpoint_interval (int): Interval (in epochs) to save model checkpoints. Default is 5.
+    """
     print("Training day and night")
     print(lr)
 

@@ -35,6 +35,14 @@ def preprocess(
     raw_dir: Path,
     processed_dir: Path
 ) -> None:
+    """
+    Preprocess the raw corrupt MNIST data by normalizing it and saving
+    the processed tensors to disk.
+
+    Args:
+        raw_dir (Path): Directory containing the raw data files.
+        processed_dir (Path): Directory to save the processed data files.
+    """
     print("Loading data")
     train_ds, test_ds = load_raw_corrupt_mnist(raw_dir)
     print("Data loaded")
