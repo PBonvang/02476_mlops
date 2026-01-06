@@ -178,3 +178,7 @@ tools/to_pdf/**/*.pdf
 
 # vscode
 .vscode/
+
+# model files
+*.pt
+*.pth
