@@ -1,5 +1,7 @@
+from collections.abc import Callable
 import torch
 from torch import nn
+from torch.utils.data import DataLoader
 
 
 class Network(nn.Module):
@@ -12,7 +14,7 @@ class Network(nn.Module):
 
     """
 
-    def __init__(self, input_size, output_size, hidden_layers, drop_p=0.5) -> None:
+    def __init__(self, input_size: int, output_size: int, hidden_layers: list[int], drop_p: float = 0.5) -> None:
         super().__init__()
         # Input to a hidden layer
         self.hidden_layers = nn.ModuleList([nn.Linear(input_size, hidden_layers[0])])
@@ -25,7 +27,7 @@ class Network(nn.Module):
 
         self.dropout = nn.Dropout(p=drop_p)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass through the network, returns the output logits."""
         for each in self.hidden_layers:
             x = nn.functional.relu(each(x))
@@ -35,7 +37,7 @@ class Network(nn.Module):
         return nn.functional.log_softmax(x, dim=1)
 
 
-def validation(model, testloader, criterion):
+def validation(model: nn.Module, testloader: DataLoader, criterion: Callable | nn.Module) -> tuple[float, float]:
     """Validation pass through the dataset."""
     accuracy = 0
     test_loss = 0
@@ -56,7 +58,7 @@ def validation(model, testloader, criterion):
     return test_loss, accuracy
 
 
-def train(model, trainloader, testloader, criterion, optimizer=None, epochs=5, print_every=40) -> None:
+def train(model: nn.Module, trainloader: DataLoader, testloader: DataLoader, criterion: nn.Module, optimizer: torch.optim.Optimizer | None = None, epochs: int = 5, print_every: int = 40) -> None:
     """Train a PyTorch Model."""
     if optimizer is None:
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
