@@ -11,8 +11,8 @@ if __name__ == "__main__":
 
     print(f"Comparing run {exp1} to {exp2}")
 
-    model1 = torch.load(f"{exp1}/trained_model.pt")
-    model2 = torch.load(f"{exp2}/trained_model.pt")
+    model1 = torch.load(f"{exp1}/trained_model.pt", weights_only=False)
+    model2 = torch.load(f"{exp2}/trained_model.pt", weights_only=False)
 
     for p1, p2 in zip(model1.parameters(), model2.parameters()):
         if not torch.allclose(p1, p2):
