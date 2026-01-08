@@ -12,6 +12,7 @@ from torchvision.datasets import MNIST
 from torchvision.utils import save_image
 
 from torch.utils.data import TensorDataset
+from torch.profiler import profile, ProfilerActivity, tensorboard_trace_handler
 
 # Model Hyperparameters
 dataset_path = "datasets"
@@ -32,6 +33,7 @@ train_dataset = MNIST(dataset_path, train=True, download=True)
 train_dataset = TensorDataset(train_dataset.data.float() / 255.0, train_dataset.targets)
 test_dataset = MNIST(dataset_path, train=False, download=True)
 test_dataset = TensorDataset(test_dataset.data.float() / 255.0, test_dataset.targets)
+
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 
@@ -112,52 +114,62 @@ def loss_function(x, x_hat, mean, log_var):
 
 optimizer = Adam(model.parameters(), lr=lr)
 
+profiling_schedule = torch.profiler.schedule(
+    wait=5,      # Skip first 5 batches (initialization overhead)
+    warmup=2,    # Warm up for 2 batches
+    active=3,    # RECORD for 3 batches
+    repeat=1)    # Do this only once
+with profile(
+    activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
+    on_trace_ready=tensorboard_trace_handler("./log/vae_mnist"),
+    schedule=profiling_schedule) as prof:
+    print("Start training VAE...")
+    model.train()
+    for epoch in range(epochs):
+        overall_loss = 0
+        for batch_idx, (x, _) in enumerate(train_loader):
+            if batch_idx % 100 == 0:
+                print(batch_idx)
+            x = x.view(batch_size, x_dim)
+            x = x.to(DEVICE)
 
-print("Start training VAE...")
-model.train()
-for epoch in range(epochs):
-    overall_loss = 0
-    for batch_idx, (x, _) in enumerate(train_loader):
-        if batch_idx % 100 == 0:
-            print(batch_idx)
-        x = x.view(batch_size, x_dim)
-        x = x.to(DEVICE)
+            optimizer.zero_grad()
 
-        optimizer.zero_grad()
+            x_hat, mean, log_var = model(x)
+            loss = loss_function(x, x_hat, mean, log_var)
 
-        x_hat, mean, log_var = model(x)
-        loss = loss_function(x, x_hat, mean, log_var)
+            overall_loss += loss.item()
 
-        overall_loss += loss.item()
+            loss.backward()
+            optimizer.step()
 
-        loss.backward()
-        optimizer.step()
-    print(
-        "\tEpoch",
-        epoch + 1,
-        "complete!",
-        "\tAverage Loss: ",
-        overall_loss / (batch_idx * batch_size),
-    )
-print("Finish!!")
+            prof.step()
+        print(
+            "\tEpoch",
+            epoch + 1,
+            "complete!",
+            "\tAverage Loss: ",
+            overall_loss / (batch_idx * batch_size),
+        )
+    print("Finish!!")
 
-# Generate reconstructions
-model.eval()
-with torch.no_grad():
-    for batch_idx, (x, _) in enumerate(test_loader):
-        if batch_idx % 100 == 0:
-            print(batch_idx)
-        x = x.view(batch_size, x_dim)
-        x = x.to(DEVICE)
-        x_hat, _, _ = model(x)
-        break
+    # Generate reconstructions
+    model.eval()
+    with torch.no_grad():
+        for batch_idx, (x, _) in enumerate(test_loader):
+            if batch_idx % 100 == 0:
+                print(batch_idx)
+            x = x.view(batch_size, x_dim)
+            x = x.to(DEVICE)
+            x_hat, _, _ = model(x)
+            break
 
-save_image(x.view(batch_size, 1, 28, 28), "orig_data.png")
-save_image(x_hat.view(batch_size, 1, 28, 28), "reconstructions.png")
+    save_image(x.view(batch_size, 1, 28, 28), "orig_data.png")
+    save_image(x_hat.view(batch_size, 1, 28, 28), "reconstructions.png")
 
-# Generate samples
-with torch.no_grad():
-    noise = torch.randn(batch_size, latent_dim).to(DEVICE)
-    generated_images = decoder(noise)
+    # Generate samples
+    with torch.no_grad():
+        noise = torch.randn(batch_size, latent_dim).to(DEVICE)
+        generated_images = decoder(noise)
 
-save_image(generated_images.view(batch_size, 1, 28, 28), "generated_sample.png")
+    save_image(generated_images.view(batch_size, 1, 28, 28), "generated_sample.png")

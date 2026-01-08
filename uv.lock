@@ -1292,6 +1292,7 @@ dependencies = [
 dev = [
     { name = "mypy" },
     { name = "snakeviz" },
+    { name = "torch-tb-profiler" },
 ]
 exercises = [
     { name = "cookiecutter" },
@@ -1368,6 +1369,7 @@ requires-dist = [
 dev = [
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "snakeviz", specifier = ">=2.2.2" },
+    { name = "torch-tb-profiler", specifier = ">=0.4.3" },
 ]
 exercises = [
     { name = "cookiecutter", specifier = ">=2.6" },
