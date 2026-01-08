@@ -18,6 +18,7 @@ dependencies = [
   "invoke>=2.2",
   "ipykernel>=7.1.0",
   "ipython>=9.0.2",
+  "loguru>=0.7.3",
   "markdown-exec[ansi]>=1.10",
   "matplotlib>=3.10.8",
   "mkdocs-exclude>=1.0.2",
