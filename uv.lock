@@ -1291,6 +1291,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
+    { name = "snakeviz" },
 ]
 exercises = [
     { name = "cookiecutter" },
@@ -1364,7 +1365,10 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "mypy", specifier = ">=1.18.2" }]
+dev = [
+    { name = "mypy", specifier = ">=1.18.2" },
+    { name = "snakeviz", specifier = ">=2.2.2" },
+]
 exercises = [
     { name = "cookiecutter", specifier = ">=2.6" },
     { name = "coverage", specifier = ">=7.11.3" },

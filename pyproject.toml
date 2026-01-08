@@ -39,6 +39,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "mypy>=1.18.2",
+    "snakeviz>=2.2.2",
 ]
 exercises = [
   "cookiecutter>=2.6",
