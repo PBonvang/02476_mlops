@@ -4,7 +4,7 @@ steps:
     args:
       [
         "build",
-        ".",
+        "s6_the_cloud/exercise_files",
         "-t",
         "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image:latest",
         "-f",
