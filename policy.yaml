@@ -1,0 +1,7 @@
+[
+  {
+    "name": "keep-minimum-versions",
+    "action": { "type": "Keep" },
+    "mostRecentVersions": { "keepCount": 5 }
+  }
+]
