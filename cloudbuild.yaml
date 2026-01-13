@@ -8,7 +8,7 @@ steps:
         "-t",
         "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image:latest",
         "-f",
-        "Dockerfile",
+        "s6_the_cloud/exercise_files/Dockerfile",
       ]
   - name: "gcr.io/cloud-builders/docker"
     id: "Push container image"
