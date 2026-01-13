@@ -42,6 +42,7 @@ dev = [
     "mypy>=1.18.2",
     "snakeviz>=2.2.2",
     "torch-tb-profiler>=0.4.3",
+    "wandb>=0.23.0",
 ]
 exercises = [
   "cookiecutter>=2.6",

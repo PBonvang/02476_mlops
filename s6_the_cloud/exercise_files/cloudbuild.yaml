@@ -1,0 +1,21 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Build container image"
+    args:
+      [
+        "build",
+        ".",
+        "-t",
+        "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image",
+        "-f",
+        "Dockerfile",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Push container image"
+    args:
+      [
+        "push",
+        "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image",
+      ]
+options:
+  logging: CLOUD_LOGGING_ONLY

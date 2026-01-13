@@ -1294,6 +1294,7 @@ dev = [
     { name = "mypy" },
     { name = "snakeviz" },
     { name = "torch-tb-profiler" },
+    { name = "wandb" },
 ]
 exercises = [
     { name = "cookiecutter" },
@@ -1372,6 +1373,7 @@ dev = [
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "snakeviz", specifier = ">=2.2.2" },
     { name = "torch-tb-profiler", specifier = ">=0.4.3" },
+    { name = "wandb", specifier = ">=0.23.0" },
 ]
 exercises = [
     { name = "cookiecutter", specifier = ">=2.6" },
