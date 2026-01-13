@@ -6,7 +6,7 @@ steps:
         "build",
         ".",
         "-t",
-        "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image",
+        "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image:latest",
         "-f",
         "Dockerfile",
       ]
@@ -15,7 +15,7 @@ steps:
     args:
       [
         "push",
-        "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image",
+        "europe-west1-docker.pkg.dev/elaborate-haven-484208-k0/mlops-s214658/test-image:latest",
       ]
 options:
   logging: CLOUD_LOGGING_ONLY
